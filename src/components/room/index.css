@@ -1,0 +1,50 @@
+* {
+  /* background: rgb(49, 49, 47); */
+}
+
+.layout-area {
+  background: rgb(138, 37, 131);
+}
+
+.header-area {
+  background: rgb(3, 240, 141);
+}
+
+.video-area {
+  padding: 30px;
+  /* width: calc(100vh - 300px); */
+  heith: calc(100vh - 300px);
+}
+
+.video {
+  background: black;
+  /* height: 300px; */
+}
+
+.chat-area {
+  margin: 30px;
+  background: white;
+  height: calc(100vh - 240px);
+  border-radius: 15px;
+}
+
+.chat {
+  background: rgb(255, 255, 255);
+  height: 100%;
+}
+
+.new-text-area{
+  padding: 5px;
+  display: flex;
+  background: white;
+}
+
+/* Footer Area */
+.footer-area {
+  text-align: center;
+  background: black;
+}
+
+.footer-area Button {
+  margin: 0 5px;
+}
