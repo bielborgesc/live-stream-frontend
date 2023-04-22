@@ -28,7 +28,10 @@ function RoomComponent() {
       <Row style={{ height: 'calc(100vh)' }}>
         <Col sm={14} md={16} lg={16} xl={18} className="video-grid">
           <Content className="video-area">
-            <video src="" className="video"></video>
+          <video src="" className="video" sm={4} md={6} lg={6} xl={8}></video>
+          {/* <video src="" className="video" sm={4} md={6} lg={6} xl={8}></video> */}
+          {/* <video src="" className="video" sm={4} md={6} lg={6} xl={8}></video> */}
+          {/* <video src="" className="video"></video> */}
           </Content>
           <Footer className="footer-area" style={{ }}>
             <Button

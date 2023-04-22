@@ -23,13 +23,20 @@
 
 .video-area {
   padding: 30px;
+  height: calc(100vh - 162px);
+  width: 100%;
+  /* display: flex; */
   /* width: calc(100vh - 300px); */
   /* height: calc(100vh); */
 }
 
 .video {
   background: black;
+  margin: 10px;
+  border-radius: 10px;
   /* height: 300px; */
+  /* width: 100%; */
+  /* padding: 10px; */
 }
 
 .video-grid {
