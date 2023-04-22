@@ -5,6 +5,8 @@
 .layout-area {
   background: #1a2b2b;
   height: 100vh;
+  position: fixed;
+  width: 100%;
 }
 
 .header-area {
@@ -25,19 +27,43 @@
   padding: 30px;
   height: calc(100vh - 162px);
   width: 100%;
+  position: inherit;
+  text-align: center;
   /* display: flex; */
   /* width: calc(100vh - 300px); */
   /* height: calc(100vh); */
+
+  overflow-y: auto;
+    overflow-x: clip;
 }
 
 .video {
   background: black;
   margin: 10px;
   border-radius: 10px;
-  /* height: 300px; */
-  /* width: 100%; */
-  /* padding: 10px; */
+  width: inherit;
 }
+
+/* Video resposive */
+@media(min-width: 400px) {
+  .video {
+    width: 100%;
+  }
+}
+
+@media(min-width: 800px) {
+  .video {
+    width: 46%;
+  }
+}
+
+@media(min-width: 1200px) {
+  .video {
+    width: 30%;
+  }
+}
+
+/* ====== */
 
 .video-grid {
   display: grid;
