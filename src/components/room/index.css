@@ -27,10 +27,31 @@
   padding: 30px;
   display: flex;
   /* width: calc(100vh - 300px); */
-  /* height: calc(100vh); */
+  
+  height: calc(100vh - 160px);
+}
+
+.video-area div {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  align-items: center;
+  height: calc(100vh - 160px);
+  grid-auto-flow: dense;
 
   overflow-y: auto;
-    overflow-x: clip;
+  /* overflow-x: clip; */
+  /* overflow: hidden; */
+}
+
+.video-area div::-webkit-scrollbar {
+  height: 0;
+}
+
+.video-area div video {
+  /* padding: 1rem; */
+  width: 95%;
+  /* height: 100%;     */
 }
 
 .video {
