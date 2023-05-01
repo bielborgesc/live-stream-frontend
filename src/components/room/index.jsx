@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import './index.css';
 
 import { Button, Input } from 'antd';
@@ -7,9 +7,9 @@ import { VideoCameraOutlined, WindowsOutlined, AudioOutlined } from "@ant-design
 const { Header, Content, Footer } = Layout;
 
 function RoomComponent() {
-  const [cameraOn, setCameraOn] = useState(false);
+  const [cameraOn, setCameraOn] = useState(true);
   const [screenSharedOn, setScreenSharedOn] = useState(false);
-  const [micOn, setMicOn] = useState(false);
+  const [micOn, setMicOn] = useState(true);
   const [mapPeers, setMapPeers] = useState({});
 
   const [usernameInput, setUsernameInput] = useState('');
@@ -20,58 +20,38 @@ function RoomComponent() {
   const messageList = document.querySelector('#message-list');
 
   let webSocket;
-  const localStream = new MediaStream();
+  var localStream = new MediaStream();
 
   const constraints = {
     video: true,
     audio: true,
   }
-  
-  const localVideo = document.querySelector('#local-video')
-  
-  const btnToggleAudio = document.querySelector('#btn-toggle-audio')
-  const btnToggleVideo = document.querySelector('#btn-toggle-video')
-  
 
+  const onClickMic = () => {
+    const audioTracks = localStream.getAudioTracks();
+    audioTracks[0].enabled = !audioTracks[0].enabled
+    // setMicOn(audioTracks[0].enabled);
+  }
 
+  const onClickCamera = () => {
+    const videoTracks = localStream.getVideoTracks();
+    videoTracks[0].enabled = !videoTracks[0].enabled;
+    // setCameraOn(videoTracks[0].enabled);
+  }
+  
   navigator.mediaDevices.getUserMedia(constraints)
     .then(stream => {
-      localStream = stream;
+      const localVideo = document.getElementById('localVideo')
+
+      localStream = stream;  
       localVideo.srcObject = localStream;
       localVideo.muted = true;
   
-      var audioTracks = stream.getAudioTracks();
-      var videoTracks = stream.getVideoTracks();
+      const audioTracks = stream.getAudioTracks();
+      const videoTracks = stream.getVideoTracks();
   
       audioTracks[0].enabled = true;
       videoTracks[0].enabled = true;
-  
-      btnToggleAudio.addEventListener('click', () => {
-        audioTracks[0].enabled = !audioTracks[0].enabled;
-  
-        if(audioTracks[0].enabled){
-          btnToggleAudio.innerHTML = 'Audio Mute';
-  
-          return;
-        }
-  
-        btnToggleAudio.innerHTML = 'Audio Unmute';
-  
-      });
-  
-      btnToggleVideo.addEventListener('click', () => {
-        videoTracks[0].enabled = !videoTracks[0].enabled;
-  
-        if(videoTracks[0].enabled){
-          btnToggleVideo.innerHTML = 'Video Off';
-  
-          return;
-        }
-  
-        btnToggleVideo.innerHTML = 'Video On';
-  
-      });
-  
     })
     .catch(error => {
       console.log("Error accessing media devices: " + error);
@@ -159,7 +139,7 @@ function RoomComponent() {
     });
   
     peer.addEventListener('iceconnectionstatechange', () =>{
-      var iceconnectionstate = peer.iceConnectionState;
+      const iceconnectionstate = peer.iceConnectionState;
   
       if( iceconnectionstate === 'failed' || iceconnectionstate === 'disconnected' || iceconnectionstate === 'closed' ){
         let mapPeers2 = mapPeers
@@ -288,10 +268,10 @@ function RoomComponent() {
   }
 
   function getDataChannels(){
-    var dataChannels = []; 
+    let dataChannels = []; 
 
     for(let peerUsername in mapPeers){
-      var dataChannel = mapPeers[peerUsername][1];
+      let dataChannel = mapPeers[peerUsername][1];
   
       dataChannels.push(dataChannel);
     }
@@ -368,29 +348,12 @@ function RoomComponent() {
         <Col sm={14} md={16} lg={16} xl={18} className="video-grid">
           <Content className="video-area" id="video-container">
             <div>
-              <video src="" className="video" id=""></video>
-              <video src="" className="video" id=""></video>
-              {/* <video src="" className="video" id=""></video>
-              <video src="" className="video" id=""></video>
-              <video src="" className="video" id=""></video>
-              <video src="" className="video" id=""></video>
-              <video src="" className="video" id=""></video>
-              <video src="" className="video" id=""></video>
-              <video src="" className="video" id=""></video>
-              <video src="" className="video" id=""></video>
-              <video src="" className="video" id=""></video>
-              <video src="" className="video" id=""></video>
-              <video src="" className="video" id=""></video>
-              <video src="" className="video" id=""></video>
-              <video src="" className="video" id=""></video>
-              <video src="" className="video" id=""></video>
-              <video src="" className="video" id=""></video>
-              <video src="" className="video" id=""></video> */}
+              <video id="localVideo" autoPlay></video>
             </div>
           </Content>
           <Footer className="footer-area" style={{ }}>
             <Button
-              onClick={() => setCameraOn(!cameraOn)}
+              onClick={() => onClickCamera() }
               style={{
                 background: cameraOn ? '' : 'red',
                 color: cameraOn ? '' : '#FFF'
@@ -405,8 +368,8 @@ function RoomComponent() {
               }}>
               <WindowsOutlined />
             </Button>
-            <Button
-              onClick={() => setMicOn(!micOn)}
+            <Button              
+              onClick={() => onClickMic()}
               style={{
                 background: micOn ? '' : 'red',
                 color: micOn ? '' : '#FFF'
