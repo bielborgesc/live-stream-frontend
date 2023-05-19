@@ -26,36 +26,51 @@ function RoomComponent() {
     video: true,
     audio: true,
   }
-
-  const onClickMic = () => {
-    const audioTracks = localStream.getAudioTracks();
-    audioTracks[0].enabled = !audioTracks[0].enabled
-    // setMicOn(audioTracks[0].enabled);
-  }
-
-  const onClickCamera = () => {
-    const videoTracks = localStream.getVideoTracks();
-    videoTracks[0].enabled = !videoTracks[0].enabled;
-    // setCameraOn(videoTracks[0].enabled);
-  }
+  const localVideo = document.querySelector('#localVideo')
+  const btnToggleAudio = document.querySelector("#btn-toggle-audio");
+  const btnToggleVideo = document.querySelector("#btn-toggle-video");
   
-  navigator.mediaDevices.getUserMedia(constraints)
-    .then(stream => {
-      const localVideo = document.getElementById('localVideo')
+  var userMedia = navigator.mediaDevices.getUserMedia(constraints)
+  .then(stream => {
+    localStream = stream;
+    localVideo.srcObject = localStream;
+    localVideo.muted = true;
 
-      localStream = stream;  
-      localVideo.srcObject = localStream;
-      localVideo.muted = true;
-  
-      const audioTracks = stream.getAudioTracks();
-      const videoTracks = stream.getVideoTracks();
-  
-      audioTracks[0].enabled = true;
-      videoTracks[0].enabled = true;
-    })
-    .catch(error => {
-      console.log("Error accessing media devices: " + error);
-    })
+    var audioTracks = stream.getAudioTracks();
+    var videoTracks = stream.getVideoTracks();
+
+    audioTracks[0].enabled = true;
+    videoTracks[0].enabled = true;
+
+    btnToggleAudio.addEventListener('click', () => {
+      audioTracks[0].enabled = !audioTracks[0].enabled;
+
+      if(audioTracks[0].enabled){
+        btnToggleAudio.innerHTML = 'Audio Mute';
+
+        return;
+      }
+
+      btnToggleAudio.innerHTML = 'Audio Unmute';
+
+    });
+
+    btnToggleVideo.addEventListener('click', () => {
+      videoTracks[0].enabled = !videoTracks[0].enabled;
+      if(videoTracks[0].enabled){
+        btnToggleVideo.innerHTML = 'Video Off';
+
+        return;
+      }
+
+      btnToggleVideo.innerHTML = 'Video On';
+
+    });
+
+  })
+  .catch(error => {
+    console.log("Error accessing media devices: " + error);
+  })
 
   const sendSignal = (action, message) =>{
     const jsonStr = JSON.stringify({
@@ -352,12 +367,7 @@ function RoomComponent() {
             </div>
           </Content>
           <Footer className="footer-area" style={{ }}>
-            <Button
-              onClick={() => onClickCamera() }
-              style={{
-                background: cameraOn ? '' : 'red',
-                color: cameraOn ? '' : '#FFF'
-              }}>
+            <Button id="btn-toggle-video">
               <VideoCameraOutlined />
             </Button>
             <Button
@@ -368,12 +378,7 @@ function RoomComponent() {
               }}>
               <WindowsOutlined />
             </Button>
-            <Button              
-              onClick={() => onClickMic()}
-              style={{
-                background: micOn ? '' : 'red',
-                color: micOn ? '' : '#FFF'
-              }}>
+            <Button id="btn-toggle-audio">
               <AudioOutlined />
             </Button>
             {/* Fala Ai! ©2023 Created by Jackson & Gabriel */}
