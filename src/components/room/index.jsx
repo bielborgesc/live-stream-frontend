@@ -30,47 +30,50 @@ function RoomComponent() {
   const btnToggleAudio = document.querySelector("#btn-toggle-audio");
   const btnToggleVideo = document.querySelector("#btn-toggle-video");
   
-  var userMedia = navigator.mediaDevices.getUserMedia(constraints)
-  .then(stream => {
-    localStream = stream;
-    localVideo.srcObject = localStream;
-    localVideo.muted = true;
+  const update = () => {
+    var userMedia = navigator.mediaDevices.getUserMedia(constraints)
+    .then(stream => {
+      localStream = stream;
+      localVideo.srcObject = localStream;
+      localVideo.muted = true;
+  
+      var audioTracks = stream.getAudioTracks();
+      var videoTracks = stream.getVideoTracks();
+  
+      audioTracks[0].enabled = true;
+      videoTracks[0].enabled = true;
+  
+      btnToggleAudio.addEventListener('click', () => {
+        audioTracks[0].enabled = !audioTracks[0].enabled;
+  
+        if(audioTracks[0].enabled){
+          btnToggleAudio.innerHTML = 'Audio Mute';
+  
+          return;
+        }
+  
+        btnToggleAudio.innerHTML = 'Audio Unmute';
+  
+      });
+  
+      btnToggleVideo.addEventListener('click', () => {
+        videoTracks[0].enabled = !videoTracks[0].enabled;
+        if(videoTracks[0].enabled){
+          btnToggleVideo.innerHTML = 'Video Off';
+  
+          return;
+        }
+  
+        btnToggleVideo.innerHTML = 'Video On';
+  
+      });
+  
+    })
+    .catch(error => {
+      console.log("Error accessing media devices: " + error);
+    })
+  }
 
-    var audioTracks = stream.getAudioTracks();
-    var videoTracks = stream.getVideoTracks();
-
-    audioTracks[0].enabled = true;
-    videoTracks[0].enabled = true;
-
-    btnToggleAudio.addEventListener('click', () => {
-      audioTracks[0].enabled = !audioTracks[0].enabled;
-
-      if(audioTracks[0].enabled){
-        btnToggleAudio.innerHTML = 'Audio Mute';
-
-        return;
-      }
-
-      btnToggleAudio.innerHTML = 'Audio Unmute';
-
-    });
-
-    btnToggleVideo.addEventListener('click', () => {
-      videoTracks[0].enabled = !videoTracks[0].enabled;
-      if(videoTracks[0].enabled){
-        btnToggleVideo.innerHTML = 'Video Off';
-
-        return;
-      }
-
-      btnToggleVideo.innerHTML = 'Video On';
-
-    });
-
-  })
-  .catch(error => {
-    console.log("Error accessing media devices: " + error);
-  })
 
   const sendSignal = (action, message) =>{
     const jsonStr = JSON.stringify({
@@ -296,6 +299,7 @@ function RoomComponent() {
   }
 
   const btnJoin = () => {
+    update()
     const username = usernameInput;
 
     console.log('username: ' + username);
@@ -367,7 +371,12 @@ function RoomComponent() {
             </div>
           </Content>
           <Footer className="footer-area" style={{ }}>
-            <Button id="btn-toggle-video">
+            <Button id="btn-toggle-video"
+              style={{
+                background: cameraOn ? '' : 'red',
+                color: cameraOn ? '' : '#FFF'
+              }}
+            >
               <VideoCameraOutlined />
             </Button>
             <Button
@@ -378,7 +387,11 @@ function RoomComponent() {
               }}>
               <WindowsOutlined />
             </Button>
-            <Button id="btn-toggle-audio">
+            <Button id="btn-toggle-audio"
+            style={{
+              background: micOn ? '' : 'red',
+              color: micOn ? '' : '#FFF'
+            }}>
               <AudioOutlined />
             </Button>
             {/* Fala Ai! ©2023 Created by Jackson & Gabriel */}
