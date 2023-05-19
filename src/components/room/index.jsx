@@ -29,6 +29,11 @@ function RoomComponent() {
   const localVideo = document.querySelector('#localVideo')
   const btnToggleAudio = document.querySelector("#btn-toggle-audio");
   const btnToggleVideo = document.querySelector("#btn-toggle-video");
+  const btnShareScreen = document.querySelector("#btn-share-screen");
+
+  var localDisplayStream = new MediaStream();
+
+  var screenShared = false;
   
   const update = () => {
     var userMedia = navigator.mediaDevices.getUserMedia(constraints)
@@ -68,6 +73,38 @@ function RoomComponent() {
   
       });
   
+    // })
+    // .then(e => {
+      btnShareScreen.onclick = event => {
+        if(screenShared){
+            screenShared = !screenShared;
+
+            localVideo.srcObject = localStream;
+            btnShareScreen.innerHTML = 'Share screen';
+
+            var localScreen = document.querySelector('#my-screen-video');
+            removeVideo(localScreen);
+
+            return;
+        }
+        
+        // toggle screenShared
+        screenShared = !screenShared;
+
+        navigator.mediaDevices.getDisplayMedia(constraints)
+          .then(stream => {
+              localDisplayStream = stream;
+
+              var localScreen = createVideo('my-screen');
+              localScreen.srcObject = localDisplayStream;
+
+              sendSignal('new-peer', {
+                  'screen_sharing': true,
+              });
+          });
+
+        btnShareScreen.innerHTML = 'Stop sharing';
+      }
     })
     .catch(error => {
       console.log("Error accessing media devices: " + error);
@@ -380,7 +417,8 @@ function RoomComponent() {
               <VideoCameraOutlined />
             </Button>
             <Button
-              onClick={() => setScreenSharedOn(!screenSharedOn)}
+              // onClick={() => setScreenSharedOn(!screenSharedOn)}
+              id="btn-share-screen"
               style={{
                 background: screenSharedOn ? '' : '#060212',
                 color: screenSharedOn ? '' : '#FFF'
