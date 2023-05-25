@@ -52,25 +52,21 @@ function RoomComponent() {
         audioTracks[0].enabled = !audioTracks[0].enabled;
   
         if(audioTracks[0].enabled){
-          btnToggleAudio.innerHTML = 'Audio Mute';
+          setMicOn(true);
   
           return;
         }
-  
-        btnToggleAudio.innerHTML = 'Audio Unmute';
-  
+        setMicOn(false);
       });
   
       btnToggleVideo.addEventListener('click', () => {
         videoTracks[0].enabled = !videoTracks[0].enabled;
         if(videoTracks[0].enabled){
-          btnToggleVideo.innerHTML = 'Video Off';
+          setCameraOn(true);
   
           return;
         }
-  
-        btnToggleVideo.innerHTML = 'Video On';
-  
+        setCameraOn(false);
       });
   
     // })
@@ -80,7 +76,7 @@ function RoomComponent() {
             screenShared = !screenShared;
 
             localVideo.srcObject = localStream;
-            btnShareScreen.innerHTML = 'Share screen';
+            setScreenSharedOn(false);
 
             var localScreen = document.querySelector('#my-screen-video');
             removeVideo(localScreen);
@@ -103,7 +99,8 @@ function RoomComponent() {
               });
           });
 
-        btnShareScreen.innerHTML = 'Stop sharing';
+        //btnShareScreen.innerHTML = 'Stop sharing';
+        setScreenSharedOn(true);
       }
     })
     .catch(error => {
@@ -417,7 +414,6 @@ function RoomComponent() {
               <VideoCameraOutlined />
             </Button>
             <Button
-              // onClick={() => setScreenSharedOn(!screenSharedOn)}
               id="btn-share-screen"
               style={{
                 background: screenSharedOn ? '' : '#060212',
