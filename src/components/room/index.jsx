@@ -346,7 +346,7 @@ function RoomComponent() {
     setShowUsernameInput(false);
     setPersonUsername(username);
 
-    webSocket = new WebSocket("ws://localhost:8000/")
+    webSocket = new WebSocket("ws://ec2-35-172-114-102.compute-1.amazonaws.com:8000/")
     
     webSocket.addEventListener('open', (e) => {
       console.log("Connectiion Opened!")
